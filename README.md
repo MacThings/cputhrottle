@@ -10,8 +10,6 @@ Running this command would limit process 328 to a maximum of 25% CPU usage.
 
 Note that cputhrottle needs to be run with root privileges to be able to attach to the process to control. I recommend doing this via the sudo command.
 
-Source code is below, as well as a pre-compiled binary (OS X 10.5.1, Intel). If there is any interest in a PPC version I would be willing to cross-compile one. The program (_only_ if compiling from source) requires that Boost 1.33.1 be installed to compile. Run `make all` to build cputhrottle and a test program.
-
 The source hopefully will be interesting to those looking into how to manipulate processes in Mac OS via mach system calls. The code is a subset of code I was working on to create a simple debugger as an alternative to gdb. Obviously, this project was much simpler and ultimately more useful.
 
 cputhrottle makes use of the `task_info`, `task_suspend`, and `task_resume` calls. `task_info` and `task_threads` are used to collect CPU usage statistics on the process, and the program then suspends/resumes the attached process appropriately until the CPU usage has stabilized. Any errors occurring are assumed to be a result of the attached process exiting, and result in cputhrottle also exiting. Control-C is intercepted, and the attached process allowed to resume gracefully before cputhrottle exits.
