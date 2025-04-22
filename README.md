@@ -1,5 +1,8 @@
 I forked the project vom rwanyoike and added ARM support. 
 
+You can DL the U2B Version here:
+https://github.com/MacThings/cputhrottle/releases/download/macos/cputhrottle
+
 ----------------------------------------------------------------
 
 cputhrottle is a small OS X command-line utility designed to limit the CPU usage of a process to which it attaches.
