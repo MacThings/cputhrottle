@@ -1,33 +1,37 @@
+# Compiler und Flags
 CC = /usr/bin/g++
-CCFLAGS = -g
-LDFLAGS =
+CFLAGS = -Wall -std=c++11 -g
 
-BOOST_VERSION = 1_43_0
-BOOST_ROOT    = ../
-BOOST_PREFIX  = $(BOOST_ROOT)
-BOOST_INCLUDES = $(BOOST_PREFIX)//boost_$(BOOST_VERSION)
-BOOST_LIBS = $(BOOST_PREFIX)/lib
+# Architektur-Flags für Universal Binary
+ARCHS = -arch x86_64 -arch arm64
 
-CCFLAGS += -Wall -I$(BOOST_INCLUDES)
-LDFLAGS += -L$(BOOST_LIBS) 
-
-.cc.o:
-	$(CC) -c $(CCFLAGS) $<
-
-OBJS1 = cputhrottle.o manip.o 
-LIBS1 = 
+# Programme & Quellcode
 BINARY1 = cputhrottle
-OBJS2 = test.o
-LIBS2 = 
+SRCS1 = cputhrottle.cc manip.cc
+OBJS1 = $(SRCS1:.cc=.o)
+
 BINARY2 = test
+SRCS2 = test.cc
+OBJS2 = $(SRCS2:.cc=.o)
 
-$(BINARY1): $(OBJS1)
-	$(CC) $(LDFLAGS) -o $(BINARY1) $(OBJS1) $(LIBS1) 
-
-$(BINARY2): $(OBJS2)
-	$(CC) $(LDFLAGS) -o $(BINARY2) $(OBJS2) $(LIBS) 
-
+# Default-Ziel
 all: $(BINARY1) $(BINARY2)
 
+# Regel für .o-Dateien als FAT-Objekte (Universal Binary)
+%.o: %.cc
+	@echo "Compiling $< as universal binary..."
+	@$(CC) $(CFLAGS) -c -arch x86_64 $< -o $*.x86_64.o
+	@$(CC) $(CFLAGS) -c -arch arm64 $< -o $*.arm64.o
+	@lipo -create -output $@ $*.x86_64.o $*.arm64.o
+	@rm -f $*.x86_64.o $*.arm64.o
+
+# Linken
+$(BINARY1): $(OBJS1)
+	$(CC) $(CFLAGS) $(ARCHS) -o $@ $(OBJS1)
+
+$(BINARY2): $(OBJS2)
+	$(CC) $(CFLAGS) $(ARCHS) -o $@ $(OBJS2)
+
+# Aufräumen
 clean:
-	rm -f *.o core $(BINARY1) $(BINARY2)
+	rm -f *.o *.x86_64.o *.arm64.o $(BINARY1) $(BINARY2)
