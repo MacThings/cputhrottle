@@ -1,3 +1,7 @@
+I forked the project vom rwanyoike and added ARM support. 
+
+----------------------------------------------------------------
+
 cputhrottle is a small OS X command-line utility designed to limit the CPU usage of a process to which it attaches.
 
 I found that even though I have a utility installed to increase the fan speed when CPU temperature increases, sometimes I would run jobs that maxed out the CPU for long periods -- and this caused my MacBook to get extremely hot. Within the space of a couple minutes, the temperature displayed had jumped by over 40 degrees Fahrenheit.
